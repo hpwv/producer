@@ -5,7 +5,7 @@ services:
     build:
       context: .
     volumes: #TODO: remove volume, dev only
-      - ./src/index.js:/usr/src/app/index.js
+      - ./src/:/usr/src/app/
     networks:
       - kafka-proxy
 
