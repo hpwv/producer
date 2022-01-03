@@ -1,0 +1,21 @@
+{
+  "name": "producer",
+  "version": "1.0.0",
+  "description": "Simple kafka producer",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "kafka",
+    "producer",
+    "traffic",
+    "simulation"
+  ],
+  "author": "Maximilian Büttner",
+  "license": "ISC",
+  "dependencies": {
+    "ip": "1.1.5",
+    "kafkajs": "1.15.0"
+  }
+}
