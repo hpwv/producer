@@ -1,0 +1,6 @@
+{
+  "producer": {
+    "type": "bike",
+    "intervall": 500
+  }
+}

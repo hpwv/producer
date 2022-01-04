@@ -15,7 +15,9 @@
   "author": "Maximilian Büttner",
   "license": "ISC",
   "dependencies": {
-    "ip": "1.1.5",
-    "kafkajs": "1.15.0"
+    "kafkajs": "^1.15.0",
+    "config": "^3.3.6",
+    "nanoid": "^3.1.30",
+    "lodash": "^4.17.21"
   }
 }

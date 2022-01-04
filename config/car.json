@@ -1,0 +1,6 @@
+{
+  "producer": {
+    "type": "car",
+    "intervall": 200
+  }
+}

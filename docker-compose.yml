@@ -1,17 +1,17 @@
 version: "2"
 services:
-  producer:
-    image: buettner123/producer:1.0.0
+  car:
+    image: buettner123/producer:1.0.2
     build:
       context: .
-    volumes: #TODO: remove volume, dev only
-      - ./src/:/usr/src/app/
+    environment:
+      - NODE_ENV=car
+    volumes:
+      - ./src/:/usr/src/app/src/ #TODO: remove volume, dev only
+      - ./config/:/usr/src/app/config/
     networks:
       - kafka-proxy
 
 networks:
   kafka-proxy:
     name: kafka
-
-# TODO: car-producer:... pedestrian-producer:..
-# can be started with docker-compose up --scale car-producer=5,pedestrian-producer=15

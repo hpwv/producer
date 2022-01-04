@@ -10,6 +10,6 @@ RUN npm install
 
 # Bundle app source
 # TODO: dockerignore
-COPY ./src/* .
+COPY ./src/* ./src/
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "./src/index.js" ]

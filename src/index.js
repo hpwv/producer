@@ -1,54 +1,66 @@
-const ip = require('ip'),
-    {Kafka, CompressionTypes, logLevel} = require('kafkajs')
+const {Kafka, CompressionTypes, logLevel} = require('kafkajs'),
+    config = require('config'),
+    {Car} = require('./producers/car'),
+    {nanoid} = require('nanoid');
 
-const host = process.env.HOST_IP || ip.address()
+const producerMapping = {
+        "car": Car
+    },
+    kafkaProducers = [];
 
-const kafka = new Kafka({
-    logLevel: logLevel.DEBUG,
-    brokers: ['kafka-broker-1-1:9092', 'kafka-broker-2-1:9092', 'kafka-broker-3-1:9092'],
-    clientId: 'example-producer',
+const createMessage = (producer) => ({
+    key: producer.id,
+    value: JSON.stringify(producer),
 })
 
-const topic = 'my-test-topic'
-const producer = kafka.producer()
-
-const getRandomNumber = () => Math.round(Math.random(10) * 1000)
-const createMessage = num => ({
-    key: `key-1-${num}`,
-    value: `value-${num}-${new Date().toISOString()}`,
-})
-
-const sendMessage = () => {
-    return producer
+const sendMessage = (kafkaProducer, producer) => {
+    return kafkaProducer
         .send({
-            topic,
+            topic: config.topic,
             compression: CompressionTypes.GZIP,
-            messages: Array(getRandomNumber())
-                .fill()
-                .map(_ => createMessage(getRandomNumber())),
+            messages: [createMessage(producer)],
         })
-        .then(console.warn)
-        .catch(e => console.error(`[example/producer] ${e.message}`, e))
+        .then(console.log)
+        .catch(e => console.error(`[example/producer] ${e.message}`, e));
 }
 
 const run = async () => {
-    await producer.connect()
-    setInterval(sendMessage, 300)
+    if (!config.producer.type) {
+        throw new Error('producer type not given');
+    }
+
+    for (let i = 0; i < config.producers; i++) {
+        const producer = new (producerMapping[config.producer.type])(config.producer),
+            kafka = new Kafka({
+                logLevel: logLevel.DEBUG,
+                brokers: config.brokers,
+                clientId: nanoid(10),
+            }),
+            kafkaProducer = kafka.producer();
+        kafkaProducers.push(kafkaProducer);
+
+        await kafkaProducer.connect();
+
+        setInterval(() => {
+            producer.move();
+            sendMessage(kafkaProducer, producer);
+        }, config.producer.intervall);
+    }
 }
 
-run().catch(e => console.error(`[example/producer] ${e.message}`, e))
+run().catch(e => console.error(`[example/producer] ${e.message}`, e));
 
-const errorTypes = ['unhandledRejection', 'uncaughtException']
-const signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2']
+const errorTypes = ['unhandledRejection', 'uncaughtException'],
+    signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
 
 errorTypes.map(type => {
     process.on(type, async () => {
         try {
-            console.log(`process.on ${type}`)
-            await producer.disconnect()
-            process.exit(0)
+            console.log(`process.on ${type}`);
+            await Promise.all(kafkaProducers.map(it => it.disconnect()));
+            process.exit(0);
         } catch (_) {
-            process.exit(1)
+            process.exit(1);
         }
     })
 })
@@ -56,9 +68,9 @@ errorTypes.map(type => {
 signalTraps.map(type => {
     process.once(type, async () => {
         try {
-            await producer.disconnect()
+            await Promise.all(kafkaProducers.map(it => it.disconnect()));
         } finally {
-            process.kill(process.pid, type)
+            process.kill(process.pid, type);
         }
     })
 })

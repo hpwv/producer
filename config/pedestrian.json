@@ -1,0 +1,6 @@
+{
+  "producer": {
+    "type": "pedestrian",
+    "intervall": 1000
+  }
+}
