@@ -1,7 +1,7 @@
 version: "2"
 services:
   car:
-    image: buettner123/producer:1.0.2
+    image: buettner123/producer
     build:
       context: .
     environment:
