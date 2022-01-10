@@ -14,5 +14,11 @@
       "y0": 0,
       "y1": 500
     }
+  },
+  "app": {
+    "log": {
+      "level": "debug",
+      "prettyPrint": false
+    }
   }
 }

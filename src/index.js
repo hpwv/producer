@@ -1,7 +1,8 @@
 const {Kafka, CompressionTypes, logLevel} = require('kafkajs'),
     config = require('config'),
     {Car} = require('./producers/car'),
-    {nanoid} = require('nanoid');
+    {nanoid} = require('nanoid'),
+    {logger, PinoLogCreator, toKafkaJsLogLevel} = require('./log/logger');
 
 const producerMapping = {
         "car": Car
@@ -20,8 +21,8 @@ const sendMessage = (kafkaProducer, producer) => {
             compression: CompressionTypes.GZIP,
             messages: [createMessage(producer)],
         })
-        .then(console.log)
-        .catch(e => console.error(`[example/producer] ${e.message}`, e));
+        // .then(it => logger.debug(it))
+        .catch(e => logger.error(e.message, e));
 }
 
 const run = async () => {
@@ -32,12 +33,15 @@ const run = async () => {
     for (let i = 0; i < config.producers; i++) {
         const producer = new (producerMapping[config.producer.type])(config.producer),
             kafka = new Kafka({
-                logLevel: logLevel.DEBUG,
                 brokers: config.brokers,
                 clientId: nanoid(10),
+                logLevel: toKafkaJsLogLevel(config.app.log.level),
+                logCreator: PinoLogCreator
             }),
             kafkaProducer = kafka.producer();
         kafkaProducers.push(kafkaProducer);
+
+        logger.info(`Starting new producer with id ${producer.id} and config ${JSON.stringify(config.producer)}`);
 
         await kafkaProducer.connect();
 
@@ -48,7 +52,7 @@ const run = async () => {
     }
 }
 
-run().catch(e => console.error(`[example/producer] ${e.message}`, e));
+run().catch(e => logger.error(e.message, e));
 
 const errorTypes = ['unhandledRejection', 'uncaughtException'],
     signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
@@ -56,7 +60,7 @@ const errorTypes = ['unhandledRejection', 'uncaughtException'],
 errorTypes.map(type => {
     process.on(type, async () => {
         try {
-            console.log(`process.on ${type}`);
+            logger.log(`process.on ${type}`);
             await Promise.all(kafkaProducers.map(it => it.disconnect()));
             process.exit(0);
         } catch (_) {

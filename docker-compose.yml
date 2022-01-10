@@ -1,4 +1,3 @@
-version: "2"
 services:
   car:
     image: buettner123/producer
