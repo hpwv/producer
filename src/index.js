@@ -1,4 +1,4 @@
-const {Kafka, CompressionTypes, logLevel} = require('kafkajs'),
+const {Kafka, CompressionTypes} = require('kafkajs'),
     config = require('config'),
     {Car} = require('./producers/car'),
     {nanoid} = require('nanoid'),
