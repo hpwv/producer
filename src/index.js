@@ -25,10 +25,15 @@ const sendMessage = (kafkaProducer, producer) => {
         .catch(e => logger.error(e.message, e));
 }
 
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const run = async () => {
     if (!config.producer.type) {
         throw new Error('producer type not given');
     }
+    await sleep(Math.round(Math.random() * 500) + 200);
 
     for (let i = 0; i < config.producers; i++) {
         const producer = new (producerMapping[config.producer.type])(config.producer),
@@ -44,6 +49,8 @@ const run = async () => {
         logger.info(`Starting new producer with id ${producer.id} and config ${JSON.stringify(config.producer)}`);
 
         await kafkaProducer.connect();
+
+        await sleep(Math.round(Math.random() * 150) + 20);
 
         setInterval(() => {
             producer.move();
