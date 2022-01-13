@@ -5,15 +5,16 @@
     "kafka-broker-3-1:9092"
   ],
   "topic": "location-update",
-  "producers": 10,
+  "producers": 15,
   "producer": {
     "intervall": 200,
     "area": {
       "x0": 0,
-      "x1": 500,
+      "x1": 1100,
       "y0": 0,
-      "y1": 500
-    }
+      "y1": 550
+    },
+    "speedPerTick": 0.8
   },
   "app": {
     "log": {

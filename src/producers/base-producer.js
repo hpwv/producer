@@ -7,6 +7,8 @@ class BaseProducer {
     x;
     y;
     config;
+    directionX;
+    directionY;
 
     constructor(config) {
         if (!config || !config.area) {
@@ -24,11 +26,16 @@ class BaseProducer {
         this.id = nanoid(10);
         this.x = Math.round(Math.random() * (this.config.area.x1 - this.config.area.x0) + this.config.area.x0);
         this.y = Math.round(Math.random() * (this.config.area.y1 - this.config.area.y0) + this.config.area.y0);
+        this.directionX = Math.random() < 0.5 ? -1 : 1;
+        this.directionY = Math.random() > 0.5 ? -1 : 1;
     }
 
-    move() { // TODO: proper simulation
-        this.x += 1;
-        this.y += 2;
+    move() {
+        if (this.x > this.config.area.x1 || this.x < this.config.area.x0 || this.y > this.config.area.y1 || this.y < this.config.area.y0) {
+            this.initialize();
+        }
+        this.x += this.config.speedPerTick * this.directionX;
+        this.y += this.config.speedPerTick * this.directionY;
     }
 
     toJSON() {
