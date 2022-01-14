@@ -1,11 +1,15 @@
 const {Kafka, CompressionTypes} = require('kafkajs'),
     config = require('config'),
     {Car} = require('./producers/car'),
+    {Bike} = require('./producers/bike'),
+    {Pedestrian} = require('./producers/pedestrian'),
     {nanoid} = require('nanoid'),
     {logger, PinoLogCreator, toKafkaJsLogLevel} = require('./log/logger');
 
 const producerMapping = {
-        "car": Car
+        car: Car,
+        bike: Bike,
+        pedestrian: Pedestrian
     },
     kafkaProducers = [];
 

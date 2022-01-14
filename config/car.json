@@ -1,6 +1,7 @@
 {
   "producer": {
     "type": "car",
-    "intervall": 200
+    "intervall": 200,
+    "speedPerTick": 0.9
   }
 }

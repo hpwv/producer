@@ -1,6 +1,7 @@
 {
   "producer": {
     "type": "pedestrian",
-    "intervall": 1000
+    "intervall": 1000,
+    "speedPerTick": 0.2
   }
 }

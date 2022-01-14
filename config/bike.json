@@ -1,6 +1,7 @@
 {
   "producer": {
     "type": "bike",
-    "intervall": 500
+    "intervall": 500,
+    "speedPerTick": 0.4
   }
 }

@@ -30,6 +30,9 @@ class BaseProducer {
         this.directionY = Math.random() > 0.5 ? -1 : 1;
     }
 
+    /**
+     * moves the producer with the given directionX and directionY and the configured speedPerTick
+     */
     move() {
         if (this.x > this.config.area.x1 || this.x < this.config.area.x0 || this.y > this.config.area.y1 || this.y < this.config.area.y0) {
             this.initialize();

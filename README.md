@@ -22,6 +22,6 @@ terminal session or with `docker compose up -d` if you want to start it in the b
 By default, one instance of each type will be started.
 This can be changed by running the `docker compose up` command with the `scale` option.
 
-An example usage would be: `docker compose up --scale car=10,bike=5`.
-This example will start 10 car containers and 5 bike containers where each container itself starts 
+An example usage would be: `docker compose up --scale car=2 --scale bike=3`.
+This example will start 2 car containers and 3 bike containers where each container itself starts 
 as many producers as configured in its config file. 

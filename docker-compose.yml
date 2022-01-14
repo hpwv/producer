@@ -6,7 +6,26 @@ services:
     environment:
       - NODE_ENV=car
     volumes:
-      - ./src/:/usr/src/app/src/ #TODO: remove volume, dev only
+      - ./config/:/usr/src/app/config/
+    networks:
+      - kafka-proxy
+  bike:
+    image: buettner123/producer
+    build:
+      context: .
+    environment:
+      - NODE_ENV=bike
+    volumes:
+      - ./config/:/usr/src/app/config/
+    networks:
+      - kafka-proxy
+  pedestrian:
+    image: buettner123/producer
+    build:
+      context: .
+    environment:
+      - NODE_ENV=pedestrian
+    volumes:
       - ./config/:/usr/src/app/config/
     networks:
       - kafka-proxy
