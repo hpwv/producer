@@ -37,6 +37,7 @@ const run = async () => {
     if (!config.producer.type) {
         throw new Error('producer type not given');
     }
+    // randomize the start a little as multiple producer containers might be started at the same time
     await sleep(Math.round(Math.random() * 500) + 200);
 
     for (let i = 0; i < config.producers; i++) {
@@ -54,6 +55,8 @@ const run = async () => {
 
         await kafkaProducer.connect();
 
+        // delay the start of the intervall a little to create data points between producers in more random intervals,
+        // instead of clustered batches
         await sleep(Math.round(Math.random() * 150) + 20);
 
         setInterval(() => {
