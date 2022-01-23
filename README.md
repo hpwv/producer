@@ -1,6 +1,6 @@
 # Producer
 ## Introduction
-There are different types of producers: Car, bike, pedestrian.
+There are different types of producers: car, bike, pedestrian.
 Each type can be customized in the config folder.
 
 Available settings are:
@@ -8,11 +8,15 @@ Available settings are:
 producers: int # the number of producers per container
 intervall: int # ms intervall in which new data should be produced
 type: 'car' | 'bike' | 'pedestrian' # string representation of the type for this producer
+speedPerTick: 0.8 # value that defines the movement in x and y direction per intervall
 ```
 
 The `docker-compose.yml` defines which producers will be started. 
 
 ## Prerequisites
+Install `docker` and `docker-compose`.
+Run `docker compose build` to build the docker containers ahead of running them.
+
 Make sure the Kafka Cluster is up and running before starting the producers.
 
 ## Running
@@ -25,3 +29,6 @@ This can be changed by running the `docker compose up` command with the `scale` 
 An example usage would be: `docker compose up --scale car=2 --scale bike=3`.
 This example will start 2 car containers and 3 bike containers where each container itself starts 
 as many producers as configured in its config file. 
+
+## Stopping
+In order to stop the containers, run `docker compose down`.
